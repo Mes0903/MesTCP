@@ -52,78 +52,14 @@ namespace net {
 
   template <typename T>
   struct message_header {
-    T id{};
-    uint32_t size = 0;
-    std::string name;
-    std::string data;
+    T id{};    // for what type the message is
+    std::string name;    // who pass this massage
   };
 
   template <typename T>
   struct message {
     message_header<T> header{};
-    std::vector<uint32_t> body;
-
-    std::size_t size() const
-    {
-      return body.size();
-    }
-
-    friend std::ostream &operator<<(std::ostream &os, const message<T> msg)
-    {
-      os << "ID: " << static_cast<uint32_t>(msg.header.id) << " Name: " << msg.header.name << " Size: " << msg.header.size;
-      return os;
-    }
-
-
-    // Convenience Operator overloads - These allow us to add and remove stuff from
-    // the body vector as if it were a stack, so First in, Last Out. These are a
-    // template in itself, because we dont know what data type the user is pushing or
-    // popping, so lets allow them all. NOTE: It assumes the data type is fundamentally
-    // Plain Old Data (POD). TLDR: Serialise & Deserialise into/from a vector
-    template <typename DataType>
-    friend message<T> &operator<<(message<T> &msg, const DataType &data)
-    {
-      // Check that the type of the data being pushed is trivially copyable
-      static_assert(std::is_standard_layout<DataType>::value, "Data is too complex to be pushed into vector");
-
-      // Cache current size of vector, as this will be the point we insert the data
-      size_t __size = msg.body.size();
-
-      // Resize the vector by the size of the data being pushed
-      msg.body.resize(msg.body.size() + sizeof(DataType));
-
-      // Physically copy the data into the newly allocated vector space
-      std::memcpy(msg.body.data() + __size, &data, sizeof(DataType));
-
-      // Recalculate the message size
-      msg.header.size = msg.size();
-
-      // Return the target message so it can be "chained"
-      return msg;
-    }
-
-    // Pulls any POD-like data form the message buffer
-    template <typename DataType>
-    friend message<T> &operator>>(message<T> &msg, DataType &data)
-    {
-      // Check that the type of the data being pushed is trivially copyable
-      static_assert(std::is_standard_layout<DataType>::value, "Data is too complex to be pulled from vector");
-
-      // Cache the location towards the end of the vector where the pulled data starts
-      size_t __size = msg.body.size() - sizeof(DataType);
-
-      // Physically copy the data from the vector into the user variable
-      std::memcpy(&data, msg.body.data() + __size, sizeof(DataType));
-
-      // Shrink the vector to remove read bytes, and reset end position
-      msg.body.resize(__size);
-
-      // Recalculate the message size
-      msg.header.size = msg.size();
-
-      // Return the target message so it can be "chained"
-      return msg;
-    }
+    std::string data;    // message content
   };
   // An "owned" message is identical to a regular message, but it is associated with
   // a connection. On a server, the owner would be the client that sent the message,

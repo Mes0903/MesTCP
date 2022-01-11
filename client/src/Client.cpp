@@ -78,7 +78,7 @@ namespace user_detail {
       // Caution with this...
       std::chrono::system_clock::time_point __now_t = std::chrono::system_clock::now();
 
-      msg << __now_t;
+      //msg << __now_t;
       send(msg);
     }
 
@@ -106,11 +106,12 @@ namespace user_detail {
       net::message<msg_type> msg;
       msg.header.id = msg_type::PassString;
       msg.header.name = user_name;
-      msg.header.data = std::move(__data);
+      msg.data = std::move(__data);
+      std::cerr << "msg.data is " << msg.data << '\n';
       send(msg);
     }
 
-  private:
+  public:
     std::string user_name;
   };
 }    // namespace user_detail
@@ -121,6 +122,7 @@ int main()
 
   Client c;
   c.connect("127.0.0.1", 9030);
+  std::cerr << "connect ok...\n";
   c.join_server();
 
   if (c.is_connected() && !c.get_in_comming().empty()) {
@@ -128,7 +130,7 @@ int main()
 
     switch (msg.header.id) {
     case msg_type::ServerAccept: {
-      std::cout << "Server Accepted Connection\n";
+      std::cout << "In first, Server Accepted Connection\n";
       break;
     }
     }
@@ -166,15 +168,15 @@ int main()
           // Server has responded to a ping request.
           std::chrono::system_clock::time_point __now_t = std::chrono::system_clock::now();
           std::chrono::system_clock::time_point __other_t;
-          msg >> __other_t;
+          //msg >> __other_t;
           std::cout << "Ping: " << std::chrono::duration<double>(__now_t - __other_t).count() << '\n';
           break;
         }
 
         case msg_type::ServerMessage: {
-          uint32_t client_id;
-          msg >> client_id;
-          std::cout << "Hello from [" << client_id << "]\n";
+          //uint32_t client_id;
+          //msg >> client_id;
+          std::cout << "Hello from [" /*<< client_id*/ << "]\n";
           break;
         }
         }

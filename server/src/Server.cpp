@@ -104,10 +104,10 @@ namespace server_detail {
         std::cout << "[" << msg.header.name << "]: Send the message to all user\n";
 
         //Construct a new message and send it to all clients
-        net::message<msg_type> msg;
-        msg.header.id = msg_type::ServerMessage;
-        msg << client->get_id();
-        message_all_clients(msg, client);
+        net::message<msg_type> __msg;
+        __msg.header.id = msg_type::ServerMessage;
+        __msg.header.name = msg.header.name;
+        message_all_clients(__msg, client);
         break;
       }
 
@@ -117,7 +117,7 @@ namespace server_detail {
       }
 
       case msg_type::PassString: {
-        std::cout << "[" << msg.header.name << "]: " << msg.header.data << '\n';
+        std::cout << "[" << msg.header.name << "]: " << msg.data << '\n';
         break;
       }
       }
@@ -135,6 +135,5 @@ int main()
     server.update(-1, true);
   }
 
-  system("pause");
   return 0;
 }

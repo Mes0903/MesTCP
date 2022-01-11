@@ -74,8 +74,9 @@ namespace net {
 
         // Start Context Thread
         thrContext = std::thread([this]() { __io_context.run(); });
+        std::cerr << "leave connect function\n";
       } catch (std::exception &e) {
-        std::cerr << "Client Exception: " << e.what() << "\n";
+        std::cerr << "Client Exception: " << e.what() << '\n';
         return false;
       }
       return true;
