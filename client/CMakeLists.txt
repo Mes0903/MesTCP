@@ -2,8 +2,6 @@ SET(CMAKE_TOOLCHAIN_FILE "C:/Users/Mes/vcpkg/scripts/buildsystems/vcpkg.cmake")
 cmake_minimum_required(VERSION 3.12)
 project(MesTCPChatClient)
 
-find_package(Boost REQUIRED COMPONENTS system)
-
 file(GLOB_RECURSE SOURCE_FILES src/*.cpp)
 add_executable(MesTCPChatClient ${SOURCE_FILES})
 
