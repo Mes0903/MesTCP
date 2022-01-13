@@ -200,7 +200,7 @@ namespace net {
                                 else {
                                   // Reading form the client went wrong, most likely a disconnect
                                   // has occurred. Close the socket and let the system tidy it up later.
-                                  std::cerr << "[" << id << "] Read Header Fail.\n";
+                                  std::cerr << "[" << id << "] Leave the server...\n";
                                   __socket.close();
                                 }
                               });

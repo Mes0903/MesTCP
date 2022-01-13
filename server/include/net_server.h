@@ -111,7 +111,7 @@ namespace net {
             // and wait for bytes to arrive.
             __connection_deq.back()->connect_to_client(__io_counter++);
 
-            std::cout << "[" << __connection_deq.back()->get_id() << "] Connection Accepted...\n";
+            //std::cout << "[" << __connection_deq.back()->get_id() << "] Connection Accepted...\n";
           }
           else {
             // Connection will go out of scope with no pending tasks, so will
@@ -235,7 +235,7 @@ namespace net {
     tcp::acceptor __acceptor;    // Handles new incoming connection attempts...
 
     // Clients will be identified in the "wider system" via an ID
-    uint32_t __io_counter = 10000;
+    uint32_t __io_counter = 0;
   };
 }    // namespace net
 
