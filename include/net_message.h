@@ -53,13 +53,13 @@ namespace net {
   template <typename T>
   struct message_header {
     T id{};    // for what type the message is
-    std::string name;    // who pass this massage
+    std::array<wchar_t, 256> name{};    // who pass this massage
   };
 
   template <typename T>
   struct message {
     message_header<T> header{};
-    std::string data;    // message content
+    std::array<wchar_t, 256> data{};    // message content
   };
   // An "owned" message is identical to a regular message, but it is associated with
   // a connection. On a server, the owner would be the client that sent the message,

@@ -50,15 +50,11 @@
 #include <thread>
 #include <mutex>
 #include <deque>
-#include <optional>
-#include <vector>
-#include <iostream>
 #include <string>
-#include <sstream>
-#include <algorithm>
+#include <iostream>
 #include <chrono>
-#include <cstdint>
-#include <variant>
+#include <limits>
+#include <array>
 
 #ifdef _WIN32
 #define _WIN32_WINNT 0x0A00

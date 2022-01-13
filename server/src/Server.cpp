@@ -93,7 +93,7 @@ namespace server_detail {
     {
       switch (msg.header.id) {
       case msg_type::ServerPing: {
-        std::cout << "[" << msg.header.name << "]: Ping the server\n";
+        std::wcout << "[" << msg.header.name.data() << "]: Ping the server\n";
 
         // Simply bounce message back to client
         client->send(msg);
@@ -101,7 +101,7 @@ namespace server_detail {
       }
 
       case msg_type::MessageAll: {
-        std::cout << "[" << msg.header.name << "]: Send the message to all user\n";
+        std::wcout << "[" << msg.header.name.data() << "]: Send the message to all user\n";
 
         //Construct a new message and send it to all clients
         net::message<msg_type> __msg;
@@ -112,12 +112,12 @@ namespace server_detail {
       }
 
       case msg_type::JoinServer: {
-        std::cout << "[" << msg.header.name << "] Join the server\n";
+        std::wcout << "[" << msg.header.name.data() << "] Join the server\n";
         break;
       }
 
       case msg_type::PassString: {
-        std::cout << "[" << msg.header.name << "]: " << msg.data << '\n';
+        std::wcout << "[" << msg.header.name.data() << "]: " << msg.data.data() << '\n';
         break;
       }
       }

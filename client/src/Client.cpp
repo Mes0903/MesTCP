@@ -93,7 +93,9 @@ namespace user_detail {
     void join_server()
     {
       std::cout << "Input Your Name: ";
-      getline(std::cin, user_name);
+      std::wcin.get(user_name.data(), user_name.size());
+      std::wcin.clear();
+      std::wcin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
 
       net::message<msg_type> msg;
       msg.header.id = msg_type::JoinServer;
@@ -101,18 +103,19 @@ namespace user_detail {
       send(msg);
     }
 
-    void send_msg(std::string __data)
+    void send_msg(std::wstring &__data)
     {
       net::message<msg_type> msg;
       msg.header.id = msg_type::PassString;
       msg.header.name = user_name;
-      msg.data = std::move(__data);
-      std::cerr << "msg.data is " << msg.data << '\n';
+      for (unsigned int i{}, j{}; j < __data.size(); ++i, ++j)
+        msg.data[i] = __data[j];
+
       send(msg);
     }
 
   public:
-    std::string user_name;
+    std::array<wchar_t, 256> user_name{};
   };
 }    // namespace user_detail
 
@@ -122,7 +125,6 @@ int main()
 
   Client c;
   c.connect("127.0.0.1", 9030);
-  std::cerr << "connect ok...\n";
   c.join_server();
 
   if (c.is_connected() && !c.get_in_comming().empty()) {
@@ -130,7 +132,7 @@ int main()
 
     switch (msg.header.id) {
     case msg_type::ServerAccept: {
-      std::cout << "In first, Server Accepted Connection\n";
+      std::cout << "Server Accepted Connection...\n";
       break;
     }
     }
@@ -139,20 +141,20 @@ int main()
   bool quit = false;
 
   while (!quit) {
-    std::string buf;
+    std::wstring buf;
     std::cout << "> ";
-    getline(std::cin, buf);
-    if (buf == "exit")
+    getline(std::wcin, buf);
+    if (buf == L"exit")
       quit = true;
-    else if (buf == "ping")
+    else if (buf == L"ping")
       c.ping_server();
-    else if (buf == "message all")
+    else if (buf == L"message all")
       c.message_all();
     else {
       c.send_msg(buf);
     }
-
     buf.clear();
+
     std::this_thread::sleep_for(std::chrono::milliseconds(5));
     if (c.is_connected()) {
       if (!c.get_in_comming().empty()) {

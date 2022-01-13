@@ -113,10 +113,8 @@ namespace net {
         // Request asio attempts to connect to an endpoint
         boost::asio::async_connect(__socket, endpoints,
                                    [this](std::error_code ec, tcp::endpoint endpoint) {
-                                     if (!ec) {
-                                       std::cerr << "connect to server ...\n";
+                                     if (!ec)
                                        read_data();
-                                     }
                                    });
       }
     }
@@ -143,7 +141,6 @@ namespace net {
     // the target, for a client, the target is the server and vice versa
     void send(const message<T> &msg)
     {
-      std::cerr << "posting message...\n";
       boost::asio::post(__io_context,
                         [this, msg]() {
                           // If the queue has a message in it, then we must
@@ -172,7 +169,6 @@ namespace net {
       // If this function is called, we know the outgoing message queue must have
       // at least one message to send. So allocate a transmission buffer to hold
       // the message, and issue the work - asio, send these bytes
-      std::cerr << "writing header...\n";
       boost::asio::async_write(__socket, boost::asio::buffer(&__q_messages_out.front(), sizeof(message<T>)),
                                [this](std::error_code ec, std::size_t length) {
                                  if (!ec) {
@@ -196,7 +192,6 @@ namespace net {
       // size, so allocate a transmission buffer large enough to store it. In fact,
       // we will construct the message in a "temporary" message object as it's
       // convenient to work with.
-      std::cerr << "reading header...\n";
       boost::asio::async_read(__socket, boost::asio::buffer(&__temp_msg_in, sizeof(message<T>)),
                               [this](std::error_code ec, std::size_t length) {
                                 if (!ec) {
@@ -216,7 +211,6 @@ namespace net {
     {
       // Shove it in queue, converting it to an "owned message", by initialising
       // with the a shared pointer from this connection object
-      std::cerr << "add to incomming message queue...\n";
       if (__owerner_type == owner::server)
         __q_messages_in.push_back({ this->shared_from_this(), __temp_msg_in });
       else
