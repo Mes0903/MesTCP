@@ -60,6 +60,7 @@ namespace net {
   struct message {
     message_header<T> header{};
     std::array<wchar_t, 256> data{};    // message content
+    std::chrono::system_clock::time_point time = std::chrono::system_clock::now();
   };
   // An "owned" message is identical to a regular message, but it is associated with
   // a connection. On a server, the owner would be the client that sent the message,

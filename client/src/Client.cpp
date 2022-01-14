@@ -74,11 +74,6 @@ namespace user_detail {
       net::message<msg_type> msg;
       msg.header.id = msg_type::ServerPing;
       msg.header.name = user_name;
-
-      // Caution with this...
-      std::chrono::system_clock::time_point __now_t = std::chrono::system_clock::now();
-
-      //msg << __now_t;
       send(msg);
     }
 
@@ -169,8 +164,7 @@ int main()
         case msg_type::ServerPing: {
           // Server has responded to a ping request.
           std::chrono::system_clock::time_point __now_t = std::chrono::system_clock::now();
-          std::chrono::system_clock::time_point __other_t;
-          //msg >> __other_t;
+          std::chrono::system_clock::time_point __other_t = msg.time;
           std::cout << "Ping: " << std::chrono::duration<double>(__now_t - __other_t).count() << '\n';
           break;
         }
